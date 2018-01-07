@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/static'));
 
@@ -15,6 +17,11 @@ app.get('/', function(req, res) {
  res.render('home',{context : {"time":"10:30:00"}});
 });
         
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+        
 // custom 404 page
 app.use(function(req, res){
  res.type('text/plain');
@@ -29,7 +36,8 @@ app.use(function(err, req, res, next){
  res.status(500);
  res.send('500 - Server Error');
 });
-app.listen(app.get('port'), function(){
+
+http.listen(app.get('port'), function(){
  console.log( 'Express started on http://localhost:' +
  app.get('port') + '; press Ctrl-C to terminate.' );
 });
