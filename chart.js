@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var chart_engine = require('./js/chart_engine.js')
 
 app.use(express.static(__dirname + '/static'));
 
@@ -19,8 +20,13 @@ app.get('/', function(req, res) {
         
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
 });
 
+
+setInterval(chart_engine.period_event, 1500, io);
         
 // custom 404 page
 app.use(function(req, res){

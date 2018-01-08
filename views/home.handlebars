@@ -2,8 +2,31 @@
 <script>
 window.onload = function () {
 
+var socket = io();
+
 var dataPoints1 = [];
 var dataPoints2 = [];
+
+socket.on('some event', function(msg){          
+          console.log(msg.p1["x"]);
+          console.log(msg.p1["y"]);
+        dataPoints1.push({
+		x: msg.p1["x"],
+		y: msg.p1["y"]
+    	    });
+    
+        dataPoints2.push({
+		x: msg.p2["x"],
+		y: msg.p2["y"]
+	});
+                          
+     // updating legend text with  updated with y Value 
+	chart.options.data[0].legendText = " Company A  $" + yValue1;
+	chart.options.data[1].legendText = " Company B  $" + yValue2; 
+	chart.render();
+});
+
+
 
 var chart = new CanvasJS.Chart("chartContainer", {
 	zoomEnabled: true,
@@ -97,8 +120,8 @@ function updateChart(count) {
 	chart.render();
 }
 // generates first set of dataPoints 
-updateChart(100);	
-setInterval(function(){updateChart()}, updateInterval);
+//updateChart(100);	
+//setInterval(function(){updateChart()}, updateInterval);
 
 }
 </script>
